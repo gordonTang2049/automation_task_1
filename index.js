@@ -34,9 +34,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = __importStar(require("puppeteer"));
 const authProcess_1 = require("./autoProcess/authProcess");
+const fillForm_1 = require("./autoProcess/fillForm");
 const utils_1 = require("./utils");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const browser = yield puppeteer.launch({ headless: true });
+    const browser = yield puppeteer.launch({ headless: false });
     const AUTHURL = `https://apps.jll.com/PortfolioTracker/OneView/Editor.aspx?nClientID=6503` +
         `&nType=0` +
         `&nActivityType=0` +
@@ -45,67 +46,21 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         `&nParentLeaseID=0&sSortOrder=&sAscDesc=ASC&PageID=1&status=`;
     yield (0, authProcess_1.login)(browser, AUTHURL);
     // await twoFA(browser, AUTHURL)
-    yield (0, utils_1.sleep)(6000);
-    const PATH = __dirname + '/dataCsv/roadAbbr2.csv';
-    const data = yield (0, utils_1.getCsvData)(PATH);
-    yield (0, utils_1.throttleReq)(browser, data);
+    yield (0, utils_1.sleep)(3000);
+    // test in 95836215 -> cat st
+    // 17648410
+    // 2 services
+    // 17648647
+    // try if only one service
+    const URL = `https://apps.jll.com/PortfolioTracker/OneView/Editor.aspx?nClientID=6503` +
+        `&nType=0` +
+        `&nActivityType=0` +
+        `&nLeaseID=17648410` +
+        `&nParentClientID=0` +
+        `&nParentLeaseID=0&sSortOrder=&sAscDesc=ASC&PageID=1&status=`;
+    yield (0, fillForm_1.existingPropertyStatusSwitcher)(browser, URL);
+    // const PATH = __dirname + '/dataCsv/roadAbbr2.csv';
+    // const data = await getCsvData(PATH)
+    // await throttleReq(browser,data)
 });
 main();
-// // =================================================================
-// // =================================================================
-// const fillForm = (b, URL, info) => {
-//   return new Promise(async (resolve, reject) => {
-//     try{
-//       const page = await b.newPage();
-//       await page.goto(URL);
-//     //   await page.close()
-//       resolve()
-//     }catch(e){
-//       reject(e)
-//     }
-//   })
-// }
-// const main = async () => {
-//     // const browser = await puppeteer.launch({ headless: false }); // default is true
-//     // await authProcess(browser, AUTHURL)
-//     // await sleep(10000)
-//     // const URL = `https://apps.jll.com/PortfolioTracker/OneView/Editor.aspx?nClientID=6503` +
-//     //             `&nType=0` +
-//     //             `&nActivityType=0` +
-//     //             `&nLeaseID=` +
-//     //             `&nParentClientID=0` +
-//     //             `&nParentLeaseID=0&sSortOrder=&sAscDesc=ASC&PageID=1&status=`
-//     // const info = {}
-//     // await fillForm(browser, URL)
-// // // ==========================================================================================================================
-// // // Bulk Update
-// // // ==========================================================================================================================
-// //     for(let i=0; i < batches; i++){
-// //       ops = []
-// //       for(j=0; j < 5;j++){
-// //           count = j+i*5
-// //           console.log(count)
-// //           if(count < data.length){
-// //             // ==========================================
-// //             // Change
-// //             const ovcp = data[count].RecordID
-// //             // ==========================================
-// //             const URL = `https://apps.jll.com/PortfolioTracker/OneView/Editor.aspx?nClientID=6503` +
-// //                 `&nType=0` +
-// //                 `&nActivityType=0` +
-// //                 `&nLeaseID=${ovcp}` +
-// //                 `&nParentClientID=0` +
-// //                 `&nParentLeaseID=0&sSortOrder=&sAscDesc=ASC&PageID=1&status=`
-// //             let op = fillForm(browser, URL)
-// //             ops.push(op)
-// //           }
-// //         }
-// //       await Promise.all(ops)
-// //     }
-// // // ==========================================================================================================================
-// // // ==========================================================================================================================
-//     // await browser.close()
-// }
-// main()
-//     // // ctl00_Content_btnSave id -> Save Btn
-//     // // browser.close();

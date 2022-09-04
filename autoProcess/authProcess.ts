@@ -36,11 +36,22 @@ const login = async (
     const page = await broswer.newPage();
     await page.goto(URL);
 
-    await sleep(5000)
+    await sleep(20000)
     
-    // Correct the el type  
+    // Correct the el type
+    
+    
     USER && await page.type('#txtUser', USER)
+    page.$eval('#txtUser', (el)=>{
+        const inputEvent = new Event('input', {"bubbles":true})
+        el.dispatchEvent(inputEvent)
+    })
+
     PASS && await page.type('#txtPassword', PASS)
+    page.$eval('#txtPassword', (el)=>{
+        const inputEvent = new Event('input', {"bubbles":true})
+        el.dispatchEvent(inputEvent)
+    })
     
     await sleep(5000)
 
@@ -53,6 +64,8 @@ const login = async (
     
     await page.click('#input46')
     await page.click('div.o-form-button-bar>input')
+
+
     await sleep(6000)
 
     await page.close()
